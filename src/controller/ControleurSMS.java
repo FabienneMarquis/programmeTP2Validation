@@ -1,11 +1,13 @@
 package controller;
 
+import java.util.Arrays;
+
 import model.Employe;
+import model.RequeteReponse;
 
 public class ControleurSMS {
 	
-	Employe[] employes = new Employe[]{new Employe(1, "Bill", "Jodoin")};
-	ContoleurVue ctrlVue;
+	ControleurVue ctrlVue;
 	
 	public void recevoirSMS(String sms) {
 		
@@ -17,14 +19,17 @@ public class ControleurSMS {
 			String identifiant = args[0];
 			String motDePasse = args[1];
 			String serviceDemande = args[2];
+			Employe employe;
 			
-			if (authentifier(identifiant, motDePasse, serviceDemande)) {
+			if ((employe = Employe.authentifier(identifiant, motDePasse, serviceDemande)) != null) {
 				
-				RequeteReponse rr = new RequeteReponse(serviceDemande);
+				RequeteReponse rr = new RequeteReponse(employe, Arrays.copyOfRange(args, 2, args.length));
 				
-				String reponse = rr.traiter();
+				rr.traiter();
+				
+				String reponse = rr.formaterMessage();
 				if (reponse != null) {
-					this.retournerReponse(reponse);
+					ctrlVue.afficherMessage(reponse);
 				}
 				
 			} else {
@@ -46,11 +51,6 @@ public class ControleurSMS {
 	
 	private void traiter() {
 		
-	}
-	
-	private String retournerReponse(String reponseBrute, String service) {
-		String reponseFormatee = this.formaterMessage(reponseBrute, service);
-		ctrlVue.afficherMessage(reponseFormatee);
 	}
 	
 	private String formaterMessage(String brute, String service) {

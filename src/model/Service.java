@@ -1,17 +1,20 @@
 package model;
 
-public class Service {
-	
+public abstract class Service {
 	int idService;
 	String nomService;
-	int idEmploye;
+	Employe employe;
 	String[] parametreService;
+	String resultatBrut;
 	
-	
-	
-	public String formaterMessage() {
-		return "bidon";
+	public Service(int idService, String nomService) {
+		super();
+		this.idService = idService;
+		this.nomService = nomService;
 	}
+
+	public abstract void traiter();
+	public abstract String formaterMessage();
 	
 	
 }
