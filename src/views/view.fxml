@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-
-<GridPane alignment="CENTER" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="controller.Controller">
+<GridPane alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ControleurVue">
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="50.0" valignment="CENTER" />
       <RowConstraints minHeight="10.0" prefHeight="200.0" />
@@ -23,18 +23,18 @@
       <VBox alignment="CENTER" prefHeight="332.0" prefWidth="400.0" GridPane.rowIndex="1">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Message sortant" textAlignment="CENTER" wrappingWidth="400.0" VBox.vgrow="ALWAYS" />
-            <TextField>
+            <TextField fx:id="smsSortant">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
             </TextField>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Message Entrant" textAlignment="CENTER" wrappingWidth="400.0" />
-            <TextArea prefHeight="50.0" prefWidth="400.0" styleClass="text" stylesheets="@style.css" wrapText="true">
+            <TextArea fx:id="smsEntrant" prefHeight="50.0" prefWidth="400.0" styleClass="text" stylesheets="@style.css" wrapText="true">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
             </TextArea>
-            <Button fx:id="btnEnvoi" mnemonicParsing="false" onAction="#sendSMS" text="Envoi" />
+            <Button fx:id="btnEnvoi" mnemonicParsing="false" onAction="#handleSendSMSButton" text="Envoi" />
          </children>
       </VBox>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Programme de communication " textAlignment="CENTER" wrappingWidth="400.0">
@@ -43,8 +43,4 @@
          </font>
       </Text>
    </children>
-<<<<<<< HEAD
 </GridPane>
-=======
-</GridPane>
->>>>>>> refs/remotes/origin/brancheFab

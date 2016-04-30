@@ -1,66 +1,104 @@
 package controller;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import model.Employe;
 import model.RequeteReponse;
+import model.Service;
 
+/*
+ * Controleur faisant le lien entre Employe et Service
+ */
 public class ControleurSMS {
+
+	// ControleurVue ctrlVue = new ControleurVue();
+
+	private static Service requeteReponse = new RequeteReponse();
+	// Autres services non pris en compte
 	
-	ControleurVue ctrlVue;
-	
-	public void recevoirSMS(String sms) {
+	private static List<String> servicesRR = Arrays.asList(new String[]{"VerfTemp","VerfAbs","Messagerie"});
+
+	public static void newSMS(String sms, ControleurVue interfaceMobile) {
 		
 		String[] args = sms.split(" ");
 		
-		// verifier format
-		if (verifierFormat(args)) {
+		if (args.length >= 4) {
 			
 			String identifiant = args[0];
 			String motDePasse = args[1];
 			String serviceDemande = args[2];
-			Employe employe;
+			serviceDemande = (!serviceDemande.equals("VerfTemp") && !serviceDemande.equals("VerfAbs")) ? 
+					"Messagerie" : serviceDemande;
+			Employe employe = null;
 			
-			if ((employe = Employe.authentifier(identifiant, motDePasse, serviceDemande)) != null) {
-				
-				RequeteReponse rr = new RequeteReponse(employe, Arrays.copyOfRange(args, 2, args.length));
-				
-				rr.traiter();
-				
-				String reponse = rr.formaterMessage();
-				if (reponse != null) {
-					ctrlVue.afficherMessage(reponse);
-				}
-				
-			} else {
-				this.retournerReponse("Echec_authentification", serviceDemande);
+			employe = Employe.employes.get(Integer.valueOf(identifiant));
+			
+			if (employe == null) 
+			{
+				interfaceMobile.afficherMessage("Identifiant inexistant.");
 			}
-			
-		} else {
-			this.retournerReponse("Echec_format", null);
+			else 
+			{
+				interfaceMobile.lierEmplolye(employe);
+				
+				if (employe.mdp.equals(motDePasse)) {
+					
+					if (!servicesRR.contains(serviceDemande)) {
+						interfaceMobile.afficherMessage("Nom de service invalide.");
+					} else {
+					
+						boolean authorise = false;
+						for (String serviceAuthorise : employe.servicesAuth) {
+							
+							if (serviceDemande.equals(serviceAuthorise)) {
+								authorise = true;
+								ControleurSMS.requeteReponse.employe = employe;
+								ControleurSMS.requeteReponse.parametreService = Arrays.copyOfRange(args, 2, args.length);
+								
+								String reponse = ControleurSMS.requeteReponse.formaterMessage();
+								
+								if (reponse != null) {
+									interfaceMobile.afficherMessage(reponse);
+								} else if (serviceDemande.equals("Messagerie")) {
+									String destTel = args[2];
+									String message = String.join(" ", 
+											Arrays.asList(
+													Arrays.copyOfRange(args, 3, args.length)
+													)
+											);
+									newReponseSMS(employe, message, destTel, true);
+								}
+							}
+						}
+						if (!authorise) {
+							interfaceMobile.afficherMessage("Authorisation invalide.");
+						}
+					}
+				}
+				else 
+				{
+					interfaceMobile.afficherMessage("Mot de passe invalide.");
+				}
+			}
 		}
 	}
 	
-	private boolean verifierFormat(String[] args) {
-		return true;
+	public static void newReponseSMS(Employe envoyeur, String message, String noTel, boolean allumer) {
+		Optional<Employe> destEmploye = Employe.employes.values().stream().filter(emp -> emp.noTel.equals(noTel)).findFirst();
+		destEmploye.ifPresent(emp -> {
+			try {
+				ControleurVue vue = ControleurVue.vues.get(emp);
+				if (vue == null && allumer) {
+					vue = ControleurVue.allumerTelephone(emp);
+				}
+				vue.afficherMessage(envoyeur.prenomEmploye + " " + envoyeur.nomEmploye + " : " + message);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 	}
-	
-	private boolean authentifier(String id, String mdp, String serviceDemande) {
-		return true;
-	}
-	
-	private void traiter() {
-		
-	}
-	
-	private String formaterMessage(String brute, String service) {
-		return "La..... fait 12.4 degres";
-	}
-	
-	public static void main(String[] args) {
-		ControleurSMS ctrl = new ControleurSMS();
-		ctrl.recevoirSMS("1 11111 VerfTemp C123");
-	}
-	
-	
 }

@@ -10,12 +10,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/views/view.fxml"));
-        primaryStage.setTitle("Programme SMS");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        ControleurVue.allumerTelephone();
     }
-
 
     public static void main(String[] args) {
         launch(args);
