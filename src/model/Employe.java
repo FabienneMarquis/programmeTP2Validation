@@ -1,6 +1,8 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -25,15 +27,16 @@ public class Employe {
 	 */
 	public static Map<Integer, Employe> employes = new HashMap<Integer, Employe>();
 	static {
-		employes.put(1, new Employe(1, "Jodoin", "Bill", "11111", new String[] { "VerfTemp", "Messagerie" }, "4182564852"));
-		employes.put(2, new Employe(2, "Bilodeau", "Johanne", "11111", new String[] { "VerfAbs", "Messagerie" }, "2525"));
+		employes.put(1, new ResponsableChaudiere(1, "Jodoin", "Bill", "11111", "4182564852"));
+		employes.put(2, new Superviseur(2, "Bilodeau", "Johanne", "11111", "2525"));
+		employes.put(3, new Employe(3, "Savoie", "Marie", "11111", "2222"));
 	}
 
 	public int idEmploye;
 	public String nomEmploye;
 	public String prenomEmploye;
 	public String mdp; // Déplacé de Service
-	public String[] servicesAuth; // Respect du cahier de charge
+	public List<String> servicesAuth; // Respect du cahier de charge
 	public String noTel;
 
 	public Employe(
@@ -41,14 +44,25 @@ public class Employe {
 			String nomEmploye, 
 			String prenomEmploye, 
 			String mdp, 
-			String[] servicesAuth,
+			List<String> servicesAuth,
 			String noTel) {
 		super();
 		this.idEmploye = idEmploye;
 		this.nomEmploye = nomEmploye;
 		this.prenomEmploye = prenomEmploye;
 		this.mdp = mdp; 
-		this.servicesAuth = servicesAuth;
+		this.servicesAuth = new ArrayList<>();
+		this.servicesAuth.add("Messagerie");
+		this.servicesAuth.addAll(servicesAuth);
 		this.noTel = noTel;
+	}
+	
+	public Employe(
+			int idEmploye, 
+			String nomEmploye, 
+			String prenomEmploye, 
+			String mdp, 
+			String noTel) {
+		this(idEmploye, nomEmploye, prenomEmploye, mdp, new ArrayList<>(), noTel);
 	}
 }
