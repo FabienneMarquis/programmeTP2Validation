@@ -3,11 +3,13 @@ package controller;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import model.Employe;
+import model.MessagerieRequest;
 import model.RequeteReponse;
-import model.Service;
 
 /*
  * Controleur faisant le lien entre Employe et Service
@@ -16,10 +18,11 @@ public class ControleurSMS {
 
 	// ControleurVue ctrlVue = new ControleurVue();
 
-	private static Service requeteReponse = new RequeteReponse();
+	//private static Service requeteReponse = new RequeteReponse();
 	// Autres services non pris en compte
 	
 	private static List<String> servicesRR = Arrays.asList(new String[]{"VerfTemp","VerfAbs","Messagerie"});
+	private static Employe SMSEmploye = new Employe(999, "Serveur SMS", "", "090909", "090909");
 
 	public static void newSMS(String sms, ControleurVue interfaceMobile) {
 		
@@ -47,7 +50,7 @@ public class ControleurSMS {
 				if (employe.mdp.equals(motDePasse)) {
 					
 					if (!servicesRR.contains(serviceDemande)) {
-						interfaceMobile.afficherMessage("Nom de service invalide.");
+						ControleurSMS.newReponseSMS(SMSEmploye, "Nom de service invalide.", employe, false);
 					} else {
 					
 						boolean authorise = false;
@@ -55,50 +58,48 @@ public class ControleurSMS {
 							
 							if (serviceDemande.equals(serviceAuthorise)) {
 								authorise = true;
-								ControleurSMS.requeteReponse.employe = employe;
-								ControleurSMS.requeteReponse.parametreService = Arrays.copyOfRange(args, 2, args.length);
 								
-								String reponse = ControleurSMS.requeteReponse.formaterMessage();
+								RequeteReponse requete = RequeteReponse.newRequete(employe, Arrays.copyOfRange(args, 2, args.length));
+
+								Map<Employe,String> reponses = requete.lancer();
 								
-								if (reponse != null) {
-									interfaceMobile.afficherMessage(reponse);
-								} else if (serviceDemande.equals("Messagerie")) {
-									String destTel = args[2];
-									String message = String.join(" ", 
-											Arrays.asList(
-													Arrays.copyOfRange(args, 3, args.length)
-													)
-											);
-									newReponseSMS(employe, message, destTel, true);
+								for (Entry<Employe,String> envoi : reponses.entrySet()) {
+									Employe envoyeur;
+									Employe receveur;
+									if (envoi.getKey() == null) {
+										envoyeur = ControleurSMS.SMSEmploye;
+										receveur = employe;
+									} else {
+										envoyeur = employe;
+										receveur = envoi.getKey();
+									}
+									ControleurSMS.newReponseSMS(envoyeur, envoi.getValue(), receveur, true);
 								}
 							}
 						}
 						if (!authorise) {
-							interfaceMobile.afficherMessage("Authorisation invalide.");
+							ControleurSMS.newReponseSMS(SMSEmploye, "Authorisation invalide.", employe, false);
 						}
 					}
 				}
 				else 
 				{
-					interfaceMobile.afficherMessage("Mot de passe invalide.");
+					ControleurSMS.newReponseSMS(SMSEmploye, "Mot de passe invalide.", employe, false);
 				}
 			}
 		}
 	}
 	
-	public static void newReponseSMS(Employe envoyeur, String message, String noTel, boolean allumer) {
-		Optional<Employe> destEmploye = Employe.employes.values().stream().filter(emp -> emp.noTel.equals(noTel)).findFirst();
-		destEmploye.ifPresent(emp -> {
-			try {
-				ControleurVue vue = ControleurVue.vues.get(emp);
-				if (vue == null && allumer) {
-					vue = ControleurVue.allumerTelephone(emp);
-				}
-				vue.afficherMessage(envoyeur.prenomEmploye + " " + envoyeur.nomEmploye + " : " + message);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public static void newReponseSMS(Employe envoyeur, String message, Employe receveur, boolean allumer) {
+		try {
+			ControleurVue vue = ControleurVue.vues.get(receveur);
+			if (vue == null && allumer) {
+				vue = ControleurVue.allumerTelephone(receveur);
 			}
-		});
+			vue.afficherMessage(envoyeur.prenomEmploye + " " + envoyeur.nomEmploye + " : " + message);
+			MessagerieRequest.donneesMessages.get(envoyeur).incrementer();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

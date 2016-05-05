@@ -48,29 +48,4 @@ public class Absences {
 		Absences.listIdEmployes = listAbsences;
 		Absences.nombreEmployes = listAbsences.size();
 	}
-	
-	/*
-	// Méthode plus ou moins utile mais fidèle au diagramme des classes.
-	public static List<Integer> faireListeJour() {
-		return faireListe(LocalDate.now());
-	}
-
-	// Méthode plus ou moins utile mais fidèle au diagramme des classes.
-	public static List<Integer> faireListeSemaine() {
-		return faireListe(LocalDate.now().minusDays(7));
-	}
-
-	// Méthode supplémentaire pour éviter la duplication
-	private static List<Integer> faireListe(LocalDate limiteInclusive) {
-		LocalDate limiteExclusive = limiteInclusive.minusDays(1);
-		List<Integer> listAbsences = new ArrayList<>();
-		for (Entry<Integer, LocalDate> entry : Req.absences.entrySet()) {
-			if (entry.getValue().isAfter(limiteExclusive)) {
-				listAbsences.add(entry.getKey());
-			}
-		}
-		return listAbsences;
-	}
-	*/
-
 }

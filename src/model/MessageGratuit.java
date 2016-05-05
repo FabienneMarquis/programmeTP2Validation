@@ -17,5 +17,9 @@ public class MessageGratuit {
 	public int verifierNbMessages() {
 		return this.compteur;
 	}
+	
+	public void incrementer() {
+		this.compteur += 1;
+	}
 
 }

@@ -7,8 +7,8 @@ public abstract class Service {
 
 	private int idService;
 	private String nomService;
-	public Employe employe; // Remplace idEmploye et mdpEmploye
-	public String[] parametreService;
+	public Employe serveurSMS; // Remplace idEmploye et mdpEmploye
+	//public String[] parametreService;
 	//Object resultatBrut;
 
 	public Service(int idService, String nomService) {
@@ -17,6 +17,6 @@ public abstract class Service {
 		this.nomService = nomService;
 	}
 
-	public abstract String formaterMessage();
+	public abstract Map<Employe,String> lancer();
 	
 }

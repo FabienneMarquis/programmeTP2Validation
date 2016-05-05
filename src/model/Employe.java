@@ -55,6 +55,8 @@ public class Employe {
 		this.servicesAuth.add("Messagerie");
 		this.servicesAuth.addAll(servicesAuth);
 		this.noTel = noTel;
+		
+		MessagerieRequest.donneesMessages.put(this, new MessageGratuit(idEmploye));
 	}
 	
 	public Employe(
@@ -64,5 +66,14 @@ public class Employe {
 			String mdp, 
 			String noTel) {
 		this(idEmploye, nomEmploye, prenomEmploye, mdp, new ArrayList<>(), noTel);
+	}
+	
+	public static String getFullName(int id) {
+		Employe employe;
+		if ((employe = Employe.employes.get(id)) != null) {
+			return employe.prenomEmploye + " " + employe.nomEmploye;
+		} else {
+			return null;
+		}
 	}
 }
