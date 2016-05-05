@@ -8,5 +8,4 @@ public class Superviseur extends Employe {
 			String noTel) {
 		super(idEmploye, nomEmploye, prenomEmploye, mdp, Arrays.asList(new String[]{"VerfAbs"}), noTel);
 	}
-
 }
