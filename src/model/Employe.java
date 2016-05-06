@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /*
  * Classe qui représente un employé
@@ -50,6 +51,22 @@ public class Employe {
 		this.idEmploye = idEmploye;
 		this.nomEmploye = nomEmploye;
 		this.prenomEmploye = prenomEmploye;
+		
+		assert(Pattern.compile("^.{8,15}$").matcher(mdp).find()) 
+			: "Longueur du mot de passe invalide (entre 8 et 15 caractères).";
+
+		assert(Pattern.compile("\\d.*\\d").matcher(mdp).find()) 
+			: "Le mot de passe ne contient pas deux chiffres.";
+
+		assert(Pattern.compile("^[A-Z]").matcher(mdp).find())
+			: "Le mot de passe ne débute pas par une lettre majuscule.";
+
+		assert(Pattern.compile("[a-zA-Z].*[a-zA-Z]").matcher(mdp).find())
+			: "Le mote de passe ne contient pas au moins deux lettres.";
+
+		assert(Pattern.compile("[^\\W]").matcher(mdp).find())
+			: "Le mot de passe ne contient pas de caractère spécial.";
+		
 		this.mdp = mdp; 
 		this.servicesAuth = new ArrayList<>();
 		this.servicesAuth.add("Messagerie");
