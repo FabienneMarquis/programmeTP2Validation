@@ -10,83 +10,51 @@ import java.util.Optional;
 import model.Employe;
 import model.MessagerieRequest;
 import model.RequeteReponse;
+import model.SMSEntrant;
+import model.Service;
 
 /*
  * Controleur faisant le lien entre Employe et Service
  */
 public class ControleurSMS {
-
-	// ControleurVue ctrlVue = new ControleurVue();
-
-	//private static Service requeteReponse = new RequeteReponse();
-	// Autres services non pris en compte
 	
-	private static List<String> servicesRR = Arrays.asList(new String[]{"VerfTemp","VerfAbs","Messagerie"});
-	private static Employe SMSEmploye = new Employe(999, "Serveur SMS", "", "090909", "090909");
+	private static Employe SMSEmploye = new Employe("EM2016gdhe", "Serveur SMS", "", "090909", "090909");
 
-	public static void newSMS(String sms, ControleurVue interfaceMobile) {
+	public static void newSMS(String smsString, ControleurVue interfaceMobile) {
 		
-		String[] args = sms.split(" ");
+		SMSEntrant sms = new SMSEntrant(smsString);
 		
-		if (args.length >= 4) {
-			
-			String identifiant = args[0];
-			String motDePasse = args[1];
-			String serviceDemande = args[2];
-			serviceDemande = (!serviceDemande.equals("VerfTemp") && !serviceDemande.equals("VerfAbs")) ? 
-					"Messagerie" : serviceDemande;
-			Employe employe = null;
-			
-			employe = Employe.employes.get(Integer.valueOf(identifiant));
-			
-			if (employe == null) 
-			{
-				interfaceMobile.afficherMessage("Identifiant inexistant.");
+		if (sms.getEmploye() == null) {
+			String message = "Identifiant invalide";
+			if (interfaceMobile == null) {
+				System.out.println(message);
+			} else {
+				interfaceMobile.afficherMessage(message);
 			}
-			else 
-			{
-				interfaceMobile.lierEmplolye(employe);
-				
-				if (employe.mdp.equals(motDePasse)) {
-					
-					if (!servicesRR.contains(serviceDemande)) {
-						ControleurSMS.newReponseSMS(SMSEmploye, "Nom de service invalide.", employe, false);
-					} else {
-					
-						boolean authorise = false;
-						for (String serviceAuthorise : employe.servicesAuth) {
-							
-							if (serviceDemande.equals(serviceAuthorise)) {
-								authorise = true;
-								
-								RequeteReponse requete = RequeteReponse.newRequete(employe, Arrays.copyOfRange(args, 2, args.length));
-
-								Map<Employe,String> reponses = requete.lancer();
-								
-								for (Entry<Employe,String> envoi : reponses.entrySet()) {
-									Employe envoyeur;
-									Employe receveur;
-									if (envoi.getKey() == null) {
-										envoyeur = ControleurSMS.SMSEmploye;
-										receveur = employe;
-									} else {
-										envoyeur = employe;
-										receveur = envoi.getKey();
-									}
-									ControleurSMS.newReponseSMS(envoyeur, envoi.getValue(), receveur, true);
-								}
-							}
-						}
-						if (!authorise) {
-							ControleurSMS.newReponseSMS(SMSEmploye, "Authorisation invalide.", employe, false);
-						}
-					}
-				}
-				else 
-				{
-					ControleurSMS.newReponseSMS(SMSEmploye, "Mot de passe invalide.", employe, false);
-				}
+		} else {
+			if (interfaceMobile != null) {
+				interfaceMobile.lierEmplolye(sms.getEmploye());
 			}
+			if (sms.isValid()) {
+				newReponseSMS(RequeteReponse.traiter(sms), sms.getEmploye());
+			} else if (sms.getEmploye() != null){
+				newReponseSMS(SMSEmploye, sms.getError(), sms.getEmploye(), false);
+			}
+		}
+	}
+	
+	private static void newReponseSMS(Map<Employe, String> reponses, Employe employe) {
+		for (Entry<Employe,String> envoi : reponses.entrySet()) {
+			Employe envoyeur;
+			Employe receveur;
+			if (envoi.getKey() == null) {
+				envoyeur = ControleurSMS.SMSEmploye;
+				receveur = employe;
+			} else {
+				envoyeur = employe;
+				receveur = envoi.getKey();
+			}
+			ControleurSMS.newReponseSMS(envoyeur, envoi.getValue(), receveur, true);
 		}
 	}
 	

@@ -1,22 +1,35 @@
 package model;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public abstract class Service {
+public abstract class Service extends ObjetIdentifie {
 
-	private int idService;
-	private String nomService;
-	public Employe serveurSMS; // Remplace idEmploye et mdpEmploye
-	//public String[] parametreService;
-	//Object resultatBrut;
-
-	public Service(int idService, String nomService) {
-		super();
+	public String idService;
+	public List<Employe> empAuth;
+	
+	public Service(String idService) {
 		this.idService = idService;
-		this.nomService = nomService;
 	}
 
 	public abstract Map<Employe,String> lancer();
+	
+	public boolean authentifier(Employe emp) {
+		for (String serviceAuthorise : emp.servicesAuth) {
+			System.out.println(serviceAuthorise);
+			if (idService.equals(serviceAuthorise)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public String getClassPrefix() {
+		return this.getClass().getName().substring(0, 2).toUpperCase();
+	}
+	
+	public String getYear() {
+		return "";
+	}
 	
 }

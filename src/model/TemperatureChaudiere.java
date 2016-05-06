@@ -1,13 +1,10 @@
 package model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class TemperatureChaudiere {
 		
-	private Integer id;
+	private String id;
 	
-	public TemperatureChaudiere(Integer id) {
+	public TemperatureChaudiere(String id) {
 		this.id = id;
 	}
 	

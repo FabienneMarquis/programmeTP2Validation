@@ -5,12 +5,12 @@ import java.util.Map;
 
 public class MessageGratuit {
 	
-	private int id;
+	private String id;
 	// Attribut ajouter par nécessité
 	private int compteur;
 	
-	public MessageGratuit(int id) {
-		this.id = id;
+	public MessageGratuit(String idEmploye) {
+		this.id = idEmploye;
 		this.compteur = 0;
 	}
 	
