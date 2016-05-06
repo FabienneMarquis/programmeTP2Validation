@@ -1,46 +1,60 @@
 package model;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 public abstract class RequeteReponse extends Service {
 
-	/*
-	 * Données. Selon le diagramme des classes, le Classe RequeteReponse connaît
-	 * toutes les données de chaudière, d'absence et de messages.
-	 */
+	protected SMSEntrant sms;
+	public static TempRequest tempService;
+	public static AbsRequest asbService;
+	public static MessagerieRequest messService;
+	
+	public static Map<String,RequeteReponse> services;
+	static {
+		services = new HashMap<>();
+		
+		tempService = TempRequest.getInstance("TE2016aaaa");
+		services.put(tempService.idService, tempService);
+		
+		asbService = AbsRequest.getInstance("AB2016aaaa");
+		services.put(asbService.idService, asbService);
+		
+		messService = MessagerieRequest.getInstance("ME2016aaaa");
+		services.put(messService.idService, messService);		
+	}
 
-	// Cardinalité déduite : RR - 1 : 1 - Absences
-
-	private Map<Employe, String> responses;
-	public Employe demandeur;
-
-	public RequeteReponse(Employe employe) {
-		super(3, "RequeteReponse");
-		this.demandeur = employe;
+	public RequeteReponse(String id) {
+		super(id);
 	}
 	
-	public abstract Map<Employe,String> lancer();
-
-	public static RequeteReponse newRequete(Employe employe, String[] args) {
-		String serviceRRDemande = args[0];
-		RequeteReponse rr;
-		
-		switch (serviceRRDemande) {
-		case "VerfTemp":
-			int idChaudiere = Integer.valueOf(args[1]);
-			rr = new TempRequest(employe, idChaudiere);
-			break;
-		case "VerfAbs":
-			String duree = args[1];
-			rr = new AbsRequest(employe, duree);
-			break;
-		default: // Messages entre usagers
-			rr = new MessagerieRequest(employe, args);
-		}
-		return rr;
+	public Map<Employe,String> lancer() {
+		return null;
 	}
-
+	
+	public abstract Map<Employe,String> lancer(SMSEntrant sms);
+	
+	public static Map<Employe,String> traiter(SMSEntrant sms) {
+		RequeteReponse service;
+		if (!Pattern.compile("[a-zA-Z]").matcher(sms.getService()).find()) {
+			service = RequeteReponse.messService;
+		} else {
+			service = services.get(sms.getService());
+		}
+		//System.out.println(service.authentifier(sms.getEmploye()));
+		Map<Employe,String> r = new HashMap<>();
+		
+		if (service == null) {
+			r.put(sms.getEmploye(), "Service non disponible");
+			return r;
+		} 
+		else if (!service.authentifier(sms.getEmploye())) {
+			r.put(sms.getEmploye(), "Mot de passe invalide");
+			return r;
+		} 
+		else {
+			return service.lancer(sms);
+		}
+	}
 }

@@ -7,39 +7,65 @@ import java.util.stream.Collectors;
 
 public class AbsRequest extends RequeteReponse {
 	
-	private String duree;
+	private static Map<String,AbsRequest> absServices;
+	private static AbsRequest instance;
+	public static SemaineAbsService semaineService;
+	public static JourAbsService jourService;
 	
-	public AbsRequest(Employe emp, String duree) {
-		super(emp);
-		this.duree = duree;
+	static {
+		absServices = new HashMap<>();
+		
+		semaineService = SemaineAbsService.getInstance("SE2016aaaa");
+		absServices.put(semaineService.idService, semaineService);		
+		
+		jourService = JourAbsService.getInstance("JO2016aaaa");
+		absServices.put(jourService.idService, jourService);
+	}
+	
+	protected AbsRequest(String id) {
+		super(id);
 	}
 
 	@Override
-	public Map<Employe, String> lancer() {
-		Map<Employe,String> reponse = new HashMap<>();
-		
-		if (duree.equals("Jour")) {
-			Absences.faireListeJour();
-		} else if (duree.equals("Semaine")) {
-			Absences.faireListeSemaine();
+	public Map<Employe, String> lancer(SMSEntrant sms) {
+		this.sms = sms;
+		AbsRequest service = absServices.get(sms.getTrailingArgs()[0]);
+		if (service == null) {
+			Map<Employe,String> r = new HashMap<>();
+			r.put(sms.getEmploye(), "Sous-service non disponible");
+			return r;
+		} else {
+			return service.lancer();
 		}
-
+	}
+	
+	public static Map<Employe,String> createResponse() {
+		List<String> noms = getListeAbsents();
+		
+		Map<Employe,String> reponse = new HashMap<>();
 		if (Absences.nombreEmployes == 0) {
 			reponse.put(null, "Il n'y a aucune absence");
 		} else {
 			reponse.put(null, String.format(
 					"Les employés %s ont été absents.", 
-					String.join(", ", this.getListeAbsents())
+					String.join(", ", noms)
 					));
 		}
 		return reponse;
 	}
 		
-	private List<String> getListeAbsents() {
+	public static List<String> getListeAbsents() {
 		return Absences.listIdEmployes
 				.stream()
 				.map(id -> Employe.getFullName(id))
 				.filter(nom -> nom != null)
 				.collect(Collectors.toList());
+	}
+
+	public static AbsRequest getInstance(String id) {
+		if (instance == null) {
+			instance = new AbsRequest(id);
+		}
+		return instance;
 	}
 }

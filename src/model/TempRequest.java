@@ -5,36 +5,46 @@ import java.util.Map;
 
 public class TempRequest extends RequeteReponse {
 	
-	public static Map<Integer, TemperatureChaudiere> chaudieres = new HashMap<>();
+	public static Map<String, TemperatureChaudiere> chaudieres = new HashMap<>();
 
 	static {
-		chaudieres.put(1, new TemperatureChaudiere(1));
-		chaudieres.put(2, new TemperatureChaudiere(2));
-		chaudieres.put(3, new TemperatureChaudiere(3));
-		chaudieres.put(4, new TemperatureChaudiere(4));
+		chaudieres.put("TE2016vvvv", new TemperatureChaudiere("TE2016vvvv"));
+		chaudieres.put("TE2016wwww", new TemperatureChaudiere("TE2016wwww"));
+		chaudieres.put("TE2016xxxx", new TemperatureChaudiere("TE2016xxxx"));
+		chaudieres.put("TE2016yyyy", new TemperatureChaudiere("TE2016yyyy"));
 	}
 	
-	int chaudiereId;
+	String chaudiereId;
+	private static TempRequest instance;
 	
-	public TempRequest(Employe emp, int chaudiereId) {
-		super(emp);
-		this.chaudiereId = chaudiereId;
+	private TempRequest(String id) {
+		super(id);
 	}
 
 	@Override
-	public Map<Employe, String> lancer() {
+	public Map<Employe, String> lancer(SMSEntrant sms) {
+		this.sms = sms;
+		this.chaudiereId = sms.getTrailingArgs()[0];
 		Map<Employe,String> reponse = new HashMap<>();
 		try {
 			reponse.put(
 					null, 
-					String.format("La chaudière %d a une température de %f °C", 
+					String.format("La chaudière %s a une température de %f °C", 
 							this.chaudiereId, 
 							TempRequest.chaudieres.get(this.chaudiereId).releverTemperature()
 							)
 					);
 		} catch (Exception e) {
-			reponse.put(null, String.format("Chaudière %d inexistante.", this.chaudiereId));
+			reponse.put(null, String.format("Chaudière %s inexistante.", this.chaudiereId));
 		}
 		return reponse;
+	}
+
+	public static TempRequest getInstance(String id) {
+		if (instance == null) {
+			instance = new TempRequest(id);
+		}
+		System.out.println(instance);
+		return instance;
 	}
 }
