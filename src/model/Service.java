@@ -3,7 +3,7 @@ package model;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Service extends ObjetIdentifie {
+public abstract class Service {
 
 	public String idService;
 	public List<Employe> empAuth;
@@ -23,13 +23,4 @@ public abstract class Service extends ObjetIdentifie {
 		}
 		return false;
 	}
-	
-	public String getClassPrefix() {
-		return this.getClass().getName().substring(0, 2).toUpperCase();
-	}
-	
-	public String getYear() {
-		return "";
-	}
-	
 }

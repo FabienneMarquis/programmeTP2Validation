@@ -1,12 +1,8 @@
 package model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class MessageGratuit {
 	
 	private String id;
-	// Attribut ajouter par nécessité
 	private int compteur;
 	
 	public MessageGratuit(String idEmploye) {
