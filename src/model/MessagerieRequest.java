@@ -14,7 +14,7 @@ public class MessagerieRequest extends RequeteReponse {
 	
 	public static Map<Employe, MessageGratuit> donneesMessages = new HashMap<>();
 	
-	public MessagerieRequest(String id) {
+	public MessagerieRequest(String id) throws Exception {
 		super(id);
 	}
 
@@ -47,7 +47,7 @@ public class MessagerieRequest extends RequeteReponse {
 		}
 	}
 
-	public static MessagerieRequest getInstance(String id) {
+	public static MessagerieRequest getInstance(String id) throws Exception {
 		if (instance == null) {
 			instance = new MessagerieRequest(id);
 		}

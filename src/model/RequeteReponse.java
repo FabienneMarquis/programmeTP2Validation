@@ -14,18 +14,21 @@ public abstract class RequeteReponse extends Service {
 	public static Map<String,RequeteReponse> services;
 	static {
 		services = new HashMap<>();
-		
-		tempService = TempRequest.getInstance("TE2016aaaa");
-		services.put(tempService.idService, tempService);
-		
-		asbService = AbsRequest.getInstance("AB2016aaaa");
-		services.put(asbService.idService, asbService);
-		
-		messService = MessagerieRequest.getInstance("ME2016aaaa");
-		services.put(messService.idService, messService);		
+		try {
+			tempService = TempRequest.getInstance("TE2016aaaa");
+			services.put(tempService.id, tempService);
+			
+			asbService = AbsRequest.getInstance("AB2016aaaa");
+			services.put(asbService.id, asbService);
+			
+			messService = MessagerieRequest.getInstance("ME2016aaaa");
+			services.put(messService.id, messService);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public RequeteReponse(String id) {
+	public RequeteReponse(String id) throws Exception {
 		super(id);
 	}
 	

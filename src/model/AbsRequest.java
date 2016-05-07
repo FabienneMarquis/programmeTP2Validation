@@ -15,14 +15,18 @@ public class AbsRequest extends RequeteReponse {
 	static {
 		absServices = new HashMap<>();
 		
-		semaineService = SemaineAbsService.getInstance("SE2016aaaa");
-		absServices.put(semaineService.idService, semaineService);		
-		
-		jourService = JourAbsService.getInstance("JO2016aaaa");
-		absServices.put(jourService.idService, jourService);
+		try {
+			semaineService = SemaineAbsService.getInstance("SE2016aaaa");
+			absServices.put(semaineService.id, semaineService);		
+			
+			jourService = JourAbsService.getInstance("JO2016aaaa");
+			absServices.put(jourService.id, jourService);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	protected AbsRequest(String id) {
+	protected AbsRequest(String id) throws Exception {
 		super(id);
 	}
 
@@ -62,7 +66,7 @@ public class AbsRequest extends RequeteReponse {
 				.collect(Collectors.toList());
 	}
 
-	public static AbsRequest getInstance(String id) {
+	public static AbsRequest getInstance(String id) throws Exception {
 		if (instance == null) {
 			instance = new AbsRequest(id);
 		}

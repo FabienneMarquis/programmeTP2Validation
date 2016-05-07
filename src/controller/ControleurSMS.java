@@ -18,7 +18,15 @@ import model.Service;
  */
 public class ControleurSMS {
 	
-	private static Employe SMSEmploye = new Employe("EM2016gdhe", "Serveur SMS", "", "090909", "090909");
+	private static Employe SMSEmploye;
+	
+	static {
+		try {
+			SMSEmploye = new Employe("EM2016gdhe", "Serveur SMS", "", "090909", "090909");
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
 	public static void newSMS(String smsString, ControleurVue interfaceMobile) {
 		

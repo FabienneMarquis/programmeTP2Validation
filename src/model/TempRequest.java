@@ -8,16 +8,20 @@ public class TempRequest extends RequeteReponse {
 	public static Map<String, TemperatureChaudiere> chaudieres = new HashMap<>();
 
 	static {
-		chaudieres.put("TE2016vvvv", new TemperatureChaudiere("TE2016vvvv"));
-		chaudieres.put("TE2016wwww", new TemperatureChaudiere("TE2016wwww"));
-		chaudieres.put("TE2016xxxx", new TemperatureChaudiere("TE2016xxxx"));
-		chaudieres.put("TE2016yyyy", new TemperatureChaudiere("TE2016yyyy"));
+		try {
+			chaudieres.put("TE2016vvvv", new TemperatureChaudiere("TE2016vvvv"));
+			chaudieres.put("TE2016wwww", new TemperatureChaudiere("TE2016wwww"));
+			chaudieres.put("TE2016xxxx", new TemperatureChaudiere("TE2016xxxx"));
+			chaudieres.put("TE2016yyyy", new TemperatureChaudiere("TE2016yyyy"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	String chaudiereId;
 	private static TempRequest instance;
 	
-	private TempRequest(String id) {
+	private TempRequest(String id) throws Exception {
 		super(id);
 	}
 
@@ -40,11 +44,11 @@ public class TempRequest extends RequeteReponse {
 		return reponse;
 	}
 
-	public static TempRequest getInstance(String id) {
+	public static TempRequest getInstance(String id) throws Exception {
 		if (instance == null) {
 			instance = new TempRequest(id);
 		}
-		System.out.println(instance);
+		//System.out.println(instance);
 		return instance;
 	}
 }

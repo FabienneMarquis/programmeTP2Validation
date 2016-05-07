@@ -1,11 +1,9 @@
 package model;
 
-public class TemperatureChaudiere {
+public class TemperatureChaudiere extends ObjetIdentifie {
 		
-	private String id;
-	
-	public TemperatureChaudiere(String id) {
-		this.id = id;
+	public TemperatureChaudiere(String id) throws Exception {
+		super(id);
 	}
 	
 	public double releverTemperature() {
