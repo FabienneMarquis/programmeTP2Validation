@@ -1,9 +1,13 @@
-package model;
+package model.service.temperature;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TempRequest extends RequeteReponse {
+import model.employe.Employe;
+import model.service.RequeteReponseService;
+import model.service.SMSEntrant;
+
+public class TempService extends RequeteReponseService {
 	
 	public static Map<String, TemperatureChaudiere> chaudieres = new HashMap<>();
 
@@ -19,9 +23,9 @@ public class TempRequest extends RequeteReponse {
 	}
 	
 	String chaudiereId;
-	private static TempRequest instance;
+	private static TempService instance;
 	
-	private TempRequest(String id) throws Exception {
+	private TempService(String id) throws Exception {
 		super(id);
 	}
 
@@ -35,7 +39,7 @@ public class TempRequest extends RequeteReponse {
 					null, 
 					String.format("La chaudière %s a une température de %f °C", 
 							this.chaudiereId, 
-							TempRequest.chaudieres.get(this.chaudiereId).releverTemperature()
+							TempService.chaudieres.get(this.chaudiereId).releverTemperature()
 							)
 					);
 		} catch (Exception e) {
@@ -44,9 +48,9 @@ public class TempRequest extends RequeteReponse {
 		return reponse;
 	}
 
-	public static TempRequest getInstance(String id) throws Exception {
+	public static TempService getInstance(String id) throws Exception {
 		if (instance == null) {
-			instance = new TempRequest(id);
+			instance = new TempService(id);
 		}
 		//System.out.println(instance);
 		return instance;

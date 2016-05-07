@@ -1,4 +1,6 @@
-package model;
+package model.service.temperature;
+
+import model.ObjetIdentifie;
 
 public class TemperatureChaudiere extends ObjetIdentifie {
 		

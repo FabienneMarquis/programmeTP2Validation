@@ -1,4 +1,4 @@
-package model;
+package model.employe;
 
 import java.util.Arrays;
 

@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import model.Employe;
-import model.MessagerieRequest;
-import model.RequeteReponse;
-import model.SMSEntrant;
-import model.Service;
+import model.employe.Employe;
+import model.service.RequeteReponseService;
+import model.service.SMSEntrant;
+import model.service.Service;
+import model.service.messagerie.MessagerieService;
 
 /*
  * Controleur faisant le lien entre Employe et Service
@@ -44,7 +44,7 @@ public class ControleurSMS {
 				interfaceMobile.lierEmplolye(sms.getEmploye());
 			}
 			if (sms.isValid()) {
-				newReponseSMS(RequeteReponse.traiter(sms), sms.getEmploye());
+				newReponseSMS(RequeteReponseService.traiter(sms), sms.getEmploye());
 			} else if (sms.getEmploye() != null){
 				newReponseSMS(SMSEmploye, sms.getError(), sms.getEmploye(), false);
 			}
@@ -73,7 +73,7 @@ public class ControleurSMS {
 				vue = ControleurVue.allumerTelephone(receveur);
 			}
 			vue.afficherMessage(envoyeur.prenomEmploye + " " + envoyeur.nomEmploye + " : " + message);
-			MessagerieRequest.donneesMessages.get(envoyeur).incrementer();
+			MessagerieService.donneesMessages.get(envoyeur).incrementer();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

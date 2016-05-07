@@ -1,6 +1,9 @@
-package model;
+package model.service;
 
 import java.util.Map;
+
+import model.ObjetIdentifie;
+import model.employe.Employe;
 
 public abstract class Service extends ObjetIdentifie {
 	

@@ -1,4 +1,4 @@
-package model;
+package model.employe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,17 +7,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import model.ObjetIdentifie;
+import model.service.RequeteReponseService;
+import model.service.messagerie.MessageGratuit;
+import model.service.messagerie.MessagerieService;
+
 public class Employe extends ObjetIdentifie {
 
 	public static Map<String, Employe> employes = new HashMap<>();
 	static {
 		try {
 			Employe emp = new ResponsableChaudiere("RE2016abcd", "Jodoin", "Bill", "A22aaaa-aaa", "4182564852");
-			emp.servicesAuth.add(RequeteReponse.tempService.id);
+			emp.servicesAuth.add(RequeteReponseService.tempService.id);
 			employes.put(emp.id, emp);
 			
 			Employe emp2 = new Superviseur("SU2016abce", "Bilodeau", "Johanne", "B12356as??as", "2525");
-			emp2.servicesAuth.add(RequeteReponse.asbService.id);
+			emp2.servicesAuth.add(RequeteReponseService.asbService.id);
 			employes.put(emp2.id, emp2);
 			
 			employes.put("EM2016abcf", new Employe("EM2016abcf", "Savoie", "Marie","C123WW4545&*88", "2222"));
@@ -60,7 +65,7 @@ public class Employe extends ObjetIdentifie {
 		
 		this.mdp = mdp; 
 		this.servicesAuth = new ArrayList<>();
-		this.servicesAuth.add(RequeteReponse.messService.id);
+		this.servicesAuth.add(RequeteReponseService.messService.id);
 		this.servicesAuth.addAll(servicesAuth);
 		this.noTel = noTel;
 		
@@ -77,7 +82,7 @@ public class Employe extends ObjetIdentifie {
 		assert invariantMdp4(mdp) : "Le mot de passe doit contenir au moins 2 lettres";
 		assert invariantMdp5(mdp) : "Le mot de passe doit contenir au moins 1 caractère spécial";
 		
-		MessagerieRequest.donneesMessages.put(this, new MessageGratuit(idEmploye));
+		MessagerieService.donneesMessages.put(this, new MessageGratuit(idEmploye));
 	}
 	
 	public Employe(

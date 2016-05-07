@@ -13,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.Employe;
+import model.employe.Employe;
 
 public class ControleurVue {
 	

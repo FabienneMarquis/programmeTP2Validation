@@ -1,4 +1,4 @@
-package model;
+package model.service.absence;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -1,20 +1,24 @@
-package model;
+package model.service.messagerie;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class MessagerieRequest extends RequeteReponse {
+import model.employe.Employe;
+import model.service.RequeteReponseService;
+import model.service.SMSEntrant;
+
+public class MessagerieService extends RequeteReponseService {
 	
 	String noDest;
 	String message;
 	private static int maxMessage = 5;
-	private static MessagerieRequest instance;
+	private static MessagerieService instance;
 	
 	public static Map<Employe, MessageGratuit> donneesMessages = new HashMap<>();
 	
-	public MessagerieRequest(String id) throws Exception {
+	public MessagerieService(String id) throws Exception {
 		super(id);
 	}
 
@@ -47,9 +51,9 @@ public class MessagerieRequest extends RequeteReponse {
 		}
 	}
 
-	public static MessagerieRequest getInstance(String id) throws Exception {
+	public static MessagerieService getInstance(String id) throws Exception {
 		if (instance == null) {
-			instance = new MessagerieRequest(id);
+			instance = new MessagerieService(id);
 		}
 		return instance;
 	}

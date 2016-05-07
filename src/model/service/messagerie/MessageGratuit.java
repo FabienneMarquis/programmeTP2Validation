@@ -1,4 +1,4 @@
-package model;
+package model.service.messagerie;
 
 public class MessageGratuit {
 	

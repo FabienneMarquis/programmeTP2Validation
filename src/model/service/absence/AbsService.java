@@ -1,14 +1,18 @@
-package model;
+package model.service.absence;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AbsRequest extends RequeteReponse {
+import model.employe.Employe;
+import model.service.RequeteReponseService;
+import model.service.SMSEntrant;
+
+public class AbsService extends RequeteReponseService {
 	
-	private static Map<String,AbsRequest> absServices;
-	private static AbsRequest instance;
+	private static Map<String,AbsService> absServices;
+	private static AbsService instance;
 	public static SemaineAbsService semaineService;
 	public static JourAbsService jourService;
 	
@@ -26,14 +30,14 @@ public class AbsRequest extends RequeteReponse {
 		}
 	}
 	
-	protected AbsRequest(String id) throws Exception {
+	protected AbsService(String id) throws Exception {
 		super(id);
 	}
 
 	@Override
 	public Map<Employe, String> lancer(SMSEntrant sms) {
 		this.sms = sms;
-		AbsRequest service = absServices.get(sms.getTrailingArgs()[0]);
+		AbsService service = absServices.get(sms.getTrailingArgs()[0]);
 		if (service == null) {
 			Map<Employe,String> r = new HashMap<>();
 			r.put(sms.getEmploye(), "Sous-service non disponible");
@@ -66,9 +70,9 @@ public class AbsRequest extends RequeteReponse {
 				.collect(Collectors.toList());
 	}
 
-	public static AbsRequest getInstance(String id) throws Exception {
+	public static AbsService getInstance(String id) throws Exception {
 		if (instance == null) {
-			instance = new AbsRequest(id);
+			instance = new AbsService(id);
 		}
 		return instance;
 	}

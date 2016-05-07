@@ -1,8 +1,10 @@
-package model;
+package model.service.absence;
 
 import java.util.Map;
 
-public class JourAbsService extends AbsRequest {
+import model.employe.Employe;
+
+public class JourAbsService extends AbsService {
 
 	private static JourAbsService instance;
 
@@ -20,7 +22,7 @@ public class JourAbsService extends AbsRequest {
 	@Override
 	public Map<Employe, String> lancer() {
 		Absences.faireListeJour();
-		return AbsRequest.createResponse();
+		return AbsService.createResponse();
 	}
 
 }

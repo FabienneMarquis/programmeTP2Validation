@@ -1,34 +1,39 @@
-package model;
+package model.service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public abstract class RequeteReponse extends Service {
+import model.employe.Employe;
+import model.service.absence.AbsService;
+import model.service.messagerie.MessagerieService;
+import model.service.temperature.TempService;
+
+public abstract class RequeteReponseService extends Service {
 
 	protected SMSEntrant sms;
-	public static TempRequest tempService;
-	public static AbsRequest asbService;
-	public static MessagerieRequest messService;
+	public static TempService tempService;
+	public static AbsService asbService;
+	public static MessagerieService messService;
 	
-	public static Map<String,RequeteReponse> services;
+	public static Map<String,RequeteReponseService> services;
 	static {
 		services = new HashMap<>();
 		try {
-			tempService = TempRequest.getInstance("TE2016aaaa");
+			tempService = TempService.getInstance("TE2016aaaa");
 			services.put(tempService.id, tempService);
 			
-			asbService = AbsRequest.getInstance("AB2016aaaa");
+			asbService = AbsService.getInstance("AB2016aaaa");
 			services.put(asbService.id, asbService);
 			
-			messService = MessagerieRequest.getInstance("ME2016aaaa");
+			messService = MessagerieService.getInstance("ME2016aaaa");
 			services.put(messService.id, messService);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public RequeteReponse(String id) throws Exception {
+	public RequeteReponseService(String id) throws Exception {
 		super(id);
 	}
 	
@@ -39,9 +44,9 @@ public abstract class RequeteReponse extends Service {
 	public abstract Map<Employe,String> lancer(SMSEntrant sms);
 	
 	public static Map<Employe,String> traiter(SMSEntrant sms) {
-		RequeteReponse service;
+		RequeteReponseService service;
 		if (!Pattern.compile("[a-zA-Z]").matcher(sms.getService()).find()) {
-			service = RequeteReponse.messService;
+			service = RequeteReponseService.messService;
 		} else {
 			service = services.get(sms.getService());
 		}

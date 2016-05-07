@@ -1,8 +1,10 @@
-package model;
+package model.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import model.employe.Employe;
 
 public class SMSEntrant {
 	
