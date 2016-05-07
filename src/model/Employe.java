@@ -7,22 +7,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class Employe {
+public class Employe extends ObjetIdentifie {
 
 	public static Map<String, Employe> employes = new HashMap<>();
 	static {
-		Employe emp = new ResponsableChaudiere("EM2016abcd", "Jodoin", "Bill", "A22aaaa-aaa", "4182564852");
-		emp.servicesAuth.add(RequeteReponse.tempService.idService);
-		employes.put(emp.idEmploye, emp);
-		
-		Employe emp2 = new Superviseur("EM2016abce", "Bilodeau", "Johanne", "B12356as??as", "2525");
-		emp2.servicesAuth.add(RequeteReponse.asbService.idService);
-		employes.put(emp2.idEmploye, emp2);
-		
-		employes.put("EM2016abcf", new Employe("EM2016abcf", "Savoie", "Marie","C123WW4545&*88", "2222"));
+		try {
+			Employe emp = new ResponsableChaudiere("RE2016abcd", "Jodoin", "Bill", "A22aaaa-aaa", "4182564852");
+			emp.servicesAuth.add(RequeteReponse.tempService.id);
+			employes.put(emp.id, emp);
+			
+			Employe emp2 = new Superviseur("SU2016abce", "Bilodeau", "Johanne", "B12356as??as", "2525");
+			emp2.servicesAuth.add(RequeteReponse.asbService.id);
+			employes.put(emp2.id, emp2);
+			
+			employes.put("EM2016abcf", new Employe("EM2016abcf", "Savoie", "Marie","C123WW4545&*88", "2222"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public String idEmploye;
 	public String nomEmploye;
 	public String prenomEmploye;
 	public String mdp; // Déplacé de Service
@@ -35,9 +38,8 @@ public class Employe {
 			String prenomEmploye, 
 			String mdp, 
 			List<String> servicesAuth,
-			String noTel) {
-		super();
-		this.idEmploye = idEmploye;
+			String noTel) throws Exception {
+		super(idEmploye);
 		this.nomEmploye = nomEmploye;
 		this.prenomEmploye = prenomEmploye;
 		
@@ -58,7 +60,7 @@ public class Employe {
 		
 		this.mdp = mdp; 
 		this.servicesAuth = new ArrayList<>();
-		this.servicesAuth.add(RequeteReponse.messService.idService);
+		this.servicesAuth.add(RequeteReponse.messService.id);
 		this.servicesAuth.addAll(servicesAuth);
 		this.noTel = noTel;
 		
@@ -83,7 +85,7 @@ public class Employe {
 			String nomEmploye, 
 			String prenomEmploye, 
 			String mdp, 
-			String noTel) {
+			String noTel) throws Exception {
 		this(idEmploye, nomEmploye, prenomEmploye, mdp, new ArrayList<>(), noTel);
 	}
 	
@@ -105,10 +107,8 @@ public class Employe {
 	}
 
 	private boolean invariantId3(String id) {
-		Calendar c = Calendar.getInstance();
-		int anneeCourante = c.get(Calendar.YEAR);
-		int anneeEntree = Integer.parseInt(id.substring(2, 6));
-		return ((anneeEntree == anneeCourante));
+		String anneeEntree = id.substring(2, 6);
+		return anneeEntree.equals(this.getYear());
 	}
 
 	private boolean invariantId4(String id) {

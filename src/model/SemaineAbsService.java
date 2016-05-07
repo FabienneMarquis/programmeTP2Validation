@@ -6,11 +6,11 @@ public class SemaineAbsService extends AbsRequest {
 	
 	private static SemaineAbsService instance;
 
-	private SemaineAbsService(String id) {
+	private SemaineAbsService(String id) throws Exception {
 		super(id);
 	}
 	
-	public static SemaineAbsService getInstance(String id) {
+	public static SemaineAbsService getInstance(String id) throws Exception {
 		if (instance == null) {
 			instance = new SemaineAbsService(id);
 		}
