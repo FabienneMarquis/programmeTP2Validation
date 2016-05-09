@@ -63,24 +63,17 @@ public class Employe extends ObjetIdentifie {
 		assert(Pattern.compile("[^\\W]").matcher(mdp).find())
 			: "Le mot de passe ne contient pas de caractère spécial.";
 		
-		this.mdp = mdp; 
+		this.setMDP(mdp);
 		this.servicesAuth = new ArrayList<>();
 		this.servicesAuth.add(RequeteReponseService.messService.id);
 		this.servicesAuth.addAll(servicesAuth);
 		this.noTel = noTel;
-		
-		String deuxPremLettres = nomEmploye.substring(0, 2);
 
-		assert invariantId1(idEmploye) : "Longueur de l'identifiant doit avoir 10 caractères";
-		assert invariantId2(idEmploye, deuxPremLettres) : "les deux premiers caractère de l'identifiant ne correspondent pas au nom";
-		assert invariantId3(idEmploye) : "L'année ne correspond pas à l'année courante";
-		assert invariantId4(idEmploye) : "les 4 derniers caractères de l'identifiant doit être alphabétiques";
-
-		assert invariantMdp1(mdp) : "Longueur du mot de passe doit entre 8 à 15 caractères";
-		assert invariantMdp2(mdp) : "Le mot de passe doit contenir au moins 2 chiffres";
-		assert invariantMdp3(mdp) : "Le mot de passe doit commencer par une lettre majuscule";
-		assert invariantMdp4(mdp) : "Le mot de passe doit contenir au moins 2 lettres";
-		assert invariantMdp5(mdp) : "Le mot de passe doit contenir au moins 1 caractère spécial";
+		assert validerLongueurMDP(mdp) : "Longueur du mot de passe doit entre 8 à 15 caractères";
+		assert valider2chiffres(mdp) : "Le mot de passe doit contenir au moins 2 chiffres";
+		assert validerMajusculeDebut(mdp) : "Le mot de passe doit commencer par une lettre majuscule";
+		assert valider2lettres(mdp) : "Le mot de passe doit contenir au moins 2 lettres";
+		assert validerCarSpecial(mdp) : "Le mot de passe doit contenir au moins 1 caractère spécial";
 		
 		MessagerieService.donneesMessages.put(this, new MessageGratuit(idEmploye));
 	}
@@ -103,40 +96,40 @@ public class Employe extends ObjetIdentifie {
 		}
 	}
 	
-	private boolean invariantId1(String id) {
-		return (id.length() == 10);
+	private void setMDP(String mdp) throws Exception {
+		if (!validerMDP(mdp)) {
+			throw new Exception("Mot de passe invalide.");
+		} else {
+			this.mdp = mdp;
+		}
+	}
+	
+	public static boolean validerMDP(String mdp) {
+		return (validerLongueurMDP(mdp) 
+				&& valider2chiffres(mdp)
+				&& validerMajusculeDebut(mdp)
+				&& valider2lettres(mdp)
+				&& validerCarSpecial(mdp)
+				);
 	}
 
-	private boolean invariantId2(String id, String deuxPremLettres) {
-		return (id.substring(0, 2).equalsIgnoreCase(deuxPremLettres));
-	}
-
-	private boolean invariantId3(String id) {
-		String anneeEntree = id.substring(2, 6);
-		return anneeEntree.equals(this.getYear());
-	}
-
-	private boolean invariantId4(String id) {
-		return (id.substring(6, 9).matches("[A-Za-z]+"));
-	}
-
-	private boolean invariantMdp1(String mdp) {
+	private static boolean validerLongueurMDP(String mdp) {
 		return ((mdp.length() >= 8) && (mdp.length() <= 15));
 	}
 
-	private boolean invariantMdp2(String mdp) {			
+	private static boolean valider2chiffres(String mdp) {			
 		return Pattern.compile("\\d.*\\d").matcher(mdp).find();		
 	}
 
-	private boolean invariantMdp3(String mdp) {		
+	private static boolean validerMajusculeDebut(String mdp) {		
 		return (mdp.matches("[A-Z].*"));
 	}
 
-	private boolean invariantMdp4(String mdp) {			
+	private static boolean valider2lettres(String mdp) {			
 		return Pattern.compile("[a-zA-Z].*[a-zA-Z]").matcher(mdp).find();
 	}
 
-	private boolean invariantMdp5(String mdp) {
-		return Pattern.compile("[&.?.%.$./.*.-]").matcher(mdp).find();
+	private static boolean validerCarSpecial(String mdp) {
+		return Pattern.compile("\\W").matcher(mdp).find();
 	}
 }

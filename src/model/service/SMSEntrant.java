@@ -1,9 +1,12 @@
 package model.service;
 
+import java.nio.file.FileVisitResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import model.ObjetIdentifie;
 import model.employe.Employe;
 
 public class SMSEntrant {
@@ -13,9 +16,10 @@ public class SMSEntrant {
 	private String service;
 	private String arg3;
 	private String[] trailingArgs;
-	private List<String> errors = new ArrayList<>();
+	private List<String> contentError = new ArrayList<>();
+	private List<String> formError = new ArrayList<>();
 	
-	public SMSEntrant(String smsString) throws IndexOutOfBoundsException {
+	public SMSEntrant(String smsString) {
 		if (validerLongueur(smsString)) {
 			String[] args = getArgs(smsString);
 			setEmploye(args[0]);
@@ -23,47 +27,81 @@ public class SMSEntrant {
 			this.arg3 = args[2];
 			setService(args[2]);
 			this.trailingArgs = Arrays.copyOfRange(args, 3, args.length);
+			validerTrailing();
 		} else {
-			errors.add("Format de sms invalide.");
+			formError.add("Format de sms invalide.");
 		}
 	}
 	
+	private void validerTrailing() {
+		if (this.service != null && !this.service.equals("Messagerie")) {
+			if (!ObjetIdentifie.validerIdentifiantGenerique(this.trailingArgs[0])) {
+				this.formError.add("Format de sous-service non valide.");
+			}
+		}
+	}
+
 	private static boolean validerLongueur(String string) {
 		return (getArgs(string).length >= 4);
 	}
 	
 	private void setEmploye(String id) {
-		employe = Employe.employes.get(id);
-		if (employe == null) {
-			this.errors.add("Identifiant non valide.");
+		if (!ObjetIdentifie.validerIdentifiantGenerique(id)) {
+			this.formError.add("Format d'identifiant non valide.");
+		} else {
+			employe = Employe.employes.get(id);
+			if (employe == null) {
+				this.contentError.add("Identifiant inexistant.");
+			}
 		}
 	}
 	
 	private void setMotDePasse(String mdp) {
-		this.motDePasse = mdp;
-		this.validerMotDePasse();
+		if (!Employe.validerMDP(mdp)) {
+			this.formError.add("Format de mot de passe invalide.");
+		} else {
+			this.motDePasse = mdp;
+			this.validerMotDePasse();
+		}
 	}
 	
 	private boolean validerMotDePasse() {
 		if (employe != null && !employe.mdp.equals(motDePasse)) {
-			errors.add("Mot de passe invalide.");
+			contentError.add("Mot de passe incorrect.");
 			return false;
 		}
 		return true;
 	}
 	
 	private void setService(String servNom) {
-		this.service = servNom;
+		if (ObjetIdentifie.validerIdentifiantGenerique(servNom)) {
+			this.service = servNom;
+		} else if (isServMessagerieDemande(servNom)) {
+			this.service = "Messagerie";
+		} else {
+			this.formError.add("Format de service invalide.");
+		}
+	}
+	
+	public static boolean isServMessagerieDemande(String arg) {
+		return !Pattern.compile("[a-zA-Z]").matcher(arg).find();
 	}
 
 	public boolean isValid() {
-		return (errors.size() == 0);
+		return (isFormatValide() && contentError.size() == 0);
+	}
+	
+	public boolean isFormatValide() {
+		return (formError.size() == 0);
 	}
 	
 	public String getError() {
-		return this.errors.isEmpty() ? null : this.errors.get(0);
+		String firstError = this.formError.isEmpty() ? null : this.formError.get(0);
+		if (firstError != null) {
+			return firstError;
+		}
+		return this.contentError.isEmpty() ? null : this.contentError.get(0);
 	}
-
 
 	public Employe getEmploye() {
 		return this.employe;
@@ -84,5 +122,9 @@ public class SMSEntrant {
 	
 	public String getService() {
 		return this.service;
+	}
+	
+	public List<String> getFormErrors() {
+		return formError;
 	}
 }

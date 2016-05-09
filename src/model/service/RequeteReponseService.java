@@ -45,7 +45,7 @@ public abstract class RequeteReponseService extends Service {
 	
 	public static Map<Employe,String> traiter(SMSEntrant sms) {
 		RequeteReponseService service;
-		if (!Pattern.compile("[a-zA-Z]").matcher(sms.getService()).find()) {
+		if (sms.getService().equals("Messagerie")) {
 			service = RequeteReponseService.messService;
 		} else {
 			service = services.get(sms.getService());
@@ -65,4 +65,5 @@ public abstract class RequeteReponseService extends Service {
 			return service.lancer(sms);
 		}
 	}
+
 }
