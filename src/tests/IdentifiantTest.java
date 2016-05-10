@@ -42,58 +42,47 @@ public class IdentifiantTest {
 	public void testsetIdString() {
 		try {
 			obj = new Employe("EM2016asod", NOM, PRENOM, MOT_DE_PASSE, NO_TELEPHONE);
-		} catch (Exception e) {
-			fail("Un objet ayant des informations valides ne peux être créé.");
-		}
+		} catch (Exception e) {}
+		Assert.assertNotNull(obj);
 	}
 	
 	@Test
 	public void testsetIdLongueur() {
 		try {
 			obj = new Employe("EM2016as", NOM, PRENOM, MOT_DE_PASSE, NO_TELEPHONE);
-		} catch (Exception e) {
-			Assert.assertEquals("L'identifiant doit avoir dix caractères.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(obj);
 	}
 	
 	@Test
 	public void testsetIdAnnee() {
 		try {
 			obj = new Employe("EM1999asod", NOM, PRENOM, MOT_DE_PASSE, NO_TELEPHONE);
-		} catch (Exception e) {
-			Assert.assertEquals("Identifiant EM1999asod pour class Employe en 2016 est non valide."
-					+ "\nDevrait ressembler à EM2016xxxx.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(obj);
 	}
 	
 	@Test
 	public void testsetIdPrefixClasse() {
 		try {
 			obj = new Employe("VA2016aseq", NOM, PRENOM, MOT_DE_PASSE, NO_TELEPHONE);
-		} catch (Exception e) {
-			System.out.println(e.getMessage().equals("Identifiant VA2016aseq pour class Employe en 2016 est non valide."
-					+ "\nDevrait ressembler à EM2016xxxx."));
-			Assert.assertEquals("Identifiant VA2016aseq pour class Employe en 2016 est non valide."
-					+ "\nDevrait ressembler à EM2016xxxx.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(obj);
 	}
 	
 	@Test
 	public void testsetId4DerniersAlpha() {
 		try {
 			obj = new Employe("EM20165a47", NOM, PRENOM, MOT_DE_PASSE, NO_TELEPHONE);
-		} catch (Exception e) {
-			Assert.assertEquals("Identifiant EM20165a47 pour class Employe en 2016 est non valide."
-					+ "\nDevrait ressembler à EM2016xxxx.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(obj);
 	}
 
 	@Test
 	public void testGenerateId() {
 		try {
 			obj = new Employe(null, NOM, PRENOM, MOT_DE_PASSE, NO_TELEPHONE);
-		} catch (Exception e) {
-			fail("Erreur de générateur de ID.");
-		}
+		} catch (Exception e) {}
+		Assert.assertNotNull(obj);
 	}
 }

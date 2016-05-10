@@ -41,50 +41,44 @@ public class MotDePasseTest {
 	public void MDPtestValide() {
 		try {
 			emp = new Employe(IDENTIFIANT, NOM, PRENOM,"F16poux!", NO_TELEPHONE);
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Erreur de création d'un employé valide.");
-		}
+		} catch (Exception e) {}
+		Assert.assertNotNull(emp);
 	}
+	
 	@Test
 	public void MDPtestLongueur() {
 		try {
 			emp = new Employe(IDENTIFIANT, NOM, PRENOM,"F16p!", NO_TELEPHONE);
-		} catch (Exception e) {
-			Assert.assertEquals("Mot de passe invalide.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(emp);
 	}
 	@Test
 	public void MDPtest2chiffres() {
 		try {
 			emp = new Employe(IDENTIFIANT, NOM, PRENOM,"Faapoux!", NO_TELEPHONE);
-		} catch (Exception e) {
-			Assert.assertEquals("Mot de passe invalide.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(emp);
 	}
 	@Test
 	public void MDPtestMajuscule() {
 		try {
 			emp = new Employe(IDENTIFIANT, NOM, PRENOM,"f16poux!", NO_TELEPHONE);
-		} catch (Exception e) {
-			Assert.assertEquals("Mot de passe invalide.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(emp);
 	}
 	@Test
 	public void MDPtest2lettress() {
 		try {
 			emp = new Employe(IDENTIFIANT, NOM, PRENOM,"F169874!", NO_TELEPHONE);
-		} catch (Exception e) {
-			Assert.assertEquals("Mot de passe invalide.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(emp);
 	}
 	@Test
 	public void MDPtestCarSpecial() {
 		try {
 			emp = new Employe(IDENTIFIANT, NOM, PRENOM,"F16poux7", NO_TELEPHONE);
-		} catch (Exception e) {
-			Assert.assertEquals("Mot de passe invalide.", e.getMessage());
-		}
+		} catch (Exception e) {}
+		Assert.assertNull(emp);
 	}
 
 }
