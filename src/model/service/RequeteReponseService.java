@@ -50,7 +50,6 @@ public abstract class RequeteReponseService extends Service {
 		} else {
 			service = services.get(sms.getService());
 		}
-		//System.out.println(service.authentifier(sms.getEmploye()));
 		Map<Employe,String> r = new HashMap<>();
 		
 		if (service == null) {

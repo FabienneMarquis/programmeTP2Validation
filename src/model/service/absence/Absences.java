@@ -18,8 +18,8 @@ public class Absences {
 	public static Map<String, LocalDate> absences = new HashMap<>();
 
 	static {
-		absences.put("EM2016abcd", LocalDate.now());
-		absences.put("EM2016abce", LocalDate.now().minusDays(3));
+		absences.put("RE2016abcd", LocalDate.now());
+		absences.put("SU2016abce", LocalDate.now().minusDays(3));
 		absences.put("EM2016abcf", LocalDate.now().minusDays(14));
 		absences.put("EM2016abcf", LocalDate.now().minusDays(264));
 	}
