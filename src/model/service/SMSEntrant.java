@@ -31,6 +31,8 @@ public class SMSEntrant {
 		} else {
 			formError.add("Format de sms invalide.");
 		}
+		
+		assert(this.isFormatValide()) : "Format de sms invalide.";
 	}
 	
 	private void validerTrailing() {
